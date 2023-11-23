@@ -6,13 +6,12 @@ while users_name1==users_name2:
     users_name1=input('enter the first user name')
     users_name2=input('enter the second user name')
 while 1==1:
-    try:
-        size=int(input("choose your board size:  15 or 19: "))
-        size==15 or size==19
-    except:
-        print('size wrong. please try again')
+    size=input("choose your board size:  15 or 19: ")
+    if size=='15' or size=='19'
+            size=int(size)
+            break
     else:
-        break
+        print('wrong input. please try again')
 piece=[["+"for i in range(size)] for j in range(size)]
 tool1=[]
 tool2=[]

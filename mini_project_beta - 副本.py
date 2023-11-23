@@ -7,7 +7,7 @@ while users_name1==users_name2:
     users_name2=input('enter the second user name')
 while 1==1:
     size=input("choose your board size:  15 or 19: ")
-    if size=='15' or size=='19'
+    if size=='15' or size=='19':
             size=int(size)
             break
     else:

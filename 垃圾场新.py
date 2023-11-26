@@ -19,14 +19,14 @@ class Game:
         
 
         self.get_user_name()
-
+        
     def packin_frame2(self):
         self.frame2=tk.Frame(self.LOL)
         self.frame2.pack()
 
     def show_chess(self):
-        tk.Label(self.frame2,text=self.user_name1.get()+', you will use black').grid(row=0)
-        tk.Label(self.frame2,text=self.user_name2.get()+', you will use wight').grid(row=1)
+        tk.Label(self.frame2,text=self.user_name1.get()+', you will use o.').grid(row=0)
+        tk.Label(self.frame2,text=self.user_name2.get()+', you will use ●.').grid(row=1)
         tk.Button(self.frame2,text='confirm',command=self.delete_frame2).grid(row=2)
 
 
@@ -50,6 +50,8 @@ class Game:
             global size
             size=self.board_size.get()
             size=int(size)
+            global piece
+            piece=[["十"for i in range(size)] for j in range(size)]
         elif self.user_name1.get() == self.user_name2.get() and (self.board_size.get()=='15' or self.board_size.get()=='19'):
             messagebox.showerror('Warning','The names of users cannot be the same. Please try again.')
         elif self.user_name1.get() != self.user_name2.get() and (self.board_size.get()!='15' or self.board_size.get()!='19'):
@@ -59,13 +61,17 @@ class Game:
 
     def delete_frame2(self):
         self.frame2.destroy()
-        self.packin_frame3()
         self.packin_frame4()
+        self.packin_frame3()
+        self.packin_frame5()
 
     def packin_frame3(self):
         self.frame3=tk.Frame(self.LOL)
-        self.frame3.grid(row=0)
+        self.frame3.grid(row=0,column=0)
         self.make_board()
+
+    def empty_frame3(self):
+        self.frame3.destroy()
     
     def packin_frame4(self):
         self.frame4=tk.Frame(self.LOL)
@@ -73,16 +79,14 @@ class Game:
         self.play_game()
 
     def make_board(self):
-        global piece
-        piece=[["十"for i in range(size)] for j in range(size)]
         tool1=[]
         tool2=[]
         tool3=[]
         count=0
         countelse=size+1
-        for x in range(10):
+        for m in range(10):
             tool1.append('0')
-        for y in range(size-10):
+        for n in range(size-10):
             tool1.append('1')
         for z in range(10):
             tool2.append(str(z))
@@ -90,29 +94,32 @@ class Game:
             tool2.append(str(oi))
         tool3.append(tool1)
         tool3.append(tool2)
-        for pq in range(size):
-            if pq<=9:
-                piece[pq].append('0'+str(pq))
-            else:
-                piece[pq].append(str(pq))
         for line1 in piece:
             piece_new='  '.join(line1)
-            tk.Label(self.frame3,text=piece_new,wraplength=0).grid(row=count)
+            tk.Label(self.frame3,text=piece_new).grid(row=count)
             count+=1
         for line2 in tool3:
             tool4=' '.join(line2)
             tk.Label(self.frame3,text=tool4,font=('宋体',15)).grid(row=countelse,sticky='W')
             countelse+=1
+        self.play_game()
+
+    def packin_frame5(self):
+        com=[]
+        for pq in range(size):
+            if pq<=9:
+                com.append('0'+str(pq))
+            else:
+                com.append(str(pq))
+        self.frame5=tk.Frame(self.LOL)
+        self.frame5.grid(row=0,column=1,sticky='N')
+        tk.Message(self.frame5,text=com,width=30,pady=0,anchor='nw',font=('宋体',17)).grid(row=0,column=0)
+
+        
     
     def play_game(self):
-        # while True:
-        #     if time%2==0:
-        #         player="X"
-        #         users_name=user_name1
-        #     else:
-        #         player="O"
-        #         users_name=user_name2
-            tk.Label(self.frame4,text='please enter your move').grid(row=size+3)
+            self.judge_time()
+            tk.Label(self.frame4,text=f'please enter your move. You will use {player}').grid(row=size+3)
             tk.Label(self.frame4,text='x').grid(row=size+4,column=0)
             tk.Entry(self.frame4,textvariable=self.x).grid(row=size+4,column=1)
             tk.Label(self.frame4,text='y').grid(row=size+5,column=0)
@@ -132,13 +139,27 @@ class Game:
             self.judge_place()
 
     def judge_place(self):
+        global x,y
         x=int(x)
         y=int(y)
         if x<0 or y<0 or x>=size or y>=size:
             messagebox.showerror('Warning','please place on the chessboard')
-        elif piece[x][y]!='十':
+        elif piece[y][x]!='十':
             messagebox.showerror('Warning','there are already chess piece here')
         else:
+            piece[y][x]=player
+            self.make_board()
+    
+    def judge_time(self):
+            global player,time,users_name
+            if time%2!=0:
+                player="o "
+                users_name=user_name1
+            else:
+                player="● "
+                users_name=user_name2
+            time+=1
+        
 
 
 app = tk.Tk()
